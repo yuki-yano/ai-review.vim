@@ -81,7 +81,7 @@ export const getOpenAiRequest = (
     case OPENAI_FIND_BUGS: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        displayText: displayRequestWithCodeBlock(
+        text: displayRequestWithCodeBlock(
           getOpenaiFindBugsRequest(fileType),
           code,
           fileType,
@@ -93,7 +93,7 @@ export const getOpenAiRequest = (
     case OPENAI_OPTIMIZE: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        displayText: displayRequestWithCodeBlock(
+        text: displayRequestWithCodeBlock(
           getOpenaiOptimizeRequest(fileType),
           code,
           fileType,
@@ -105,7 +105,7 @@ export const getOpenAiRequest = (
     case OPENAI_ADD_COMMENTS: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        displayText: displayRequestWithCodeBlock(
+        text: displayRequestWithCodeBlock(
           getOpenaiAddCommentsRequest(fileType),
           code,
           fileType,
@@ -117,7 +117,7 @@ export const getOpenAiRequest = (
     case OPENAI_ADD_TESTS: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        displayText: displayRequestWithCodeBlock(
+        text: displayRequestWithCodeBlock(
           getOpenaiAddTestsRequest(fileType),
           code,
           fileType,
@@ -129,7 +129,7 @@ export const getOpenAiRequest = (
     case OPENAI_EXPLAIN: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        displayText: displayRequestWithCodeBlock(
+        text: displayRequestWithCodeBlock(
           getOpenaiExplainRequest(fileType),
           code,
           fileType,
@@ -141,7 +141,7 @@ export const getOpenAiRequest = (
     case OPENAI_USE_RAW_INPUT: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        displayText: code,
+        text: code,
         code,
         fileType,
       }
@@ -188,6 +188,6 @@ class CompletionsStream extends TransformStream<string, string> {
   }
 }
 
-export function getOpenAiQuestionFileType(mode: OpenAiModes, fileType: string): string {
+export function getOpenAiRequestFileType(mode: OpenAiModes, fileType: string): string {
   return mode !== OPENAI_USE_RAW_INPUT ? fileType : "text"
 }

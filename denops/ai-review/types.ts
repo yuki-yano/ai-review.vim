@@ -3,7 +3,7 @@ import { OPENAI_MODES } from "./constant.ts"
 export type OpenAiModes = (typeof OPENAI_MODES)[number]
 export type OpenAiRequest = {
   context: string
-  displayText: string
+  text: string
   code: string
   fileType: string
 }

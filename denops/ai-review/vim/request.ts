@@ -57,7 +57,7 @@ export async function openRequestBuffer(denops: Denops, {
     await fn.setbufvar(denops, result.bufnr, "&bufhidden", "hide")
     await fn.setbufvar(denops, result.bufnr, "&buflisted", false)
 
-    const text = OPENAI_REQUEST_EDITING_HEADER + request.displayText
+    const text = OPENAI_REQUEST_EDITING_HEADER + request.text
     await fn.win_execute(denops, result.winid, "normal! ggVGd")
     await writeBuffer(denops, text, result.winid, result.bufnr)
 
@@ -98,7 +98,7 @@ export async function openRequestBuffer(denops: Denops, {
     await fn.win_gotoid(denops, requestWindow.winid)
     await fn.win_execute(denops, requestWindow.winid, "normal! ggVGd")
 
-    const text = OPENAI_REQUEST_EDITING_HEADER + request.displayText
+    const text = OPENAI_REQUEST_EDITING_HEADER + request.text
     await writeBuffer(denops, text, requestWindow.winid, requestWindow.bufnr)
 
     return { ...requestWindow, text }

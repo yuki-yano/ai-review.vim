@@ -93,7 +93,7 @@ export const writeResponse = createAsyncThunk<
 
     const openAiClient = getOpenAiClient()
     const openAiStream = await openAiClient.completions({
-      prompt: request.context + request.displayText,
+      prompt: request.context + request.text,
     })
 
     let text = response.text
@@ -114,7 +114,7 @@ export const openAiSlice = createSlice({
       if (state.request == null) {
         return
       }
-      state.request.displayText = action.payload.text
+      state.request.text = action.payload.text
     },
     updateResponseText: (state, action: PayloadAction<{ text: string }>) => {
       if (state.response == null) {

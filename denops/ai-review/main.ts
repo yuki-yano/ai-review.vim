@@ -2,7 +2,7 @@ import "./store/index.ts"
 
 import { Denops, fn } from "./deps/denops.ts"
 import { unknownutil } from "./deps/utils.ts"
-import { getOpenAiQuestionFileType, getOpenAiRequest } from "./openai/client.ts"
+import { getOpenAiRequestFileType, getOpenAiRequest } from "./openai/client.ts"
 import { OpenAiModes } from "./types.ts"
 import { OPENAI_REQUEST_EDITING_HEADER } from "./constant.ts"
 import { dispatch } from "./store/index.ts"
@@ -52,7 +52,7 @@ export const main = async (denops: Denops): Promise<void> => {
         bufnr: originalBufnr,
       })
 
-      const requestCodeFileType = getOpenAiQuestionFileType(
+      const requestCodeFileType = getOpenAiRequestFileType(
         mode as OpenAiModes,
         fileType,
       )
@@ -98,7 +98,7 @@ export const main = async (denops: Denops): Promise<void> => {
         lastLine,
         bufnr: originalBufnr,
       })
-      const requestCodeFileType = getOpenAiQuestionFileType(
+      const requestCodeFileType = getOpenAiRequestFileType(
         mode as OpenAiModes,
         fileType,
       )
@@ -108,7 +108,7 @@ export const main = async (denops: Denops): Promise<void> => {
         requestCodeFileType,
       )
 
-      return request.displayText
+      return request.text
     },
   }
 
