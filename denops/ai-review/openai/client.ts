@@ -37,19 +37,23 @@ const request = async (path: string, init: RequestInit): Promise<Response> => {
 }
 
 const completions = async ({ prompt }: { prompt: string }) => {
-  const res = request("/completions", {
+  const res = await request("/completions", {
     body: JSON.stringify({
       model: OPENAI_MODEL,
       prompt,
       max_tokens: OPENAI_MAX_TOKENS,
       stream: true,
       // TODO: Setting temperature
-      // temperature: 1,
+      temperature: 1,
     }),
   })
 
-  return (await res)
-    .body!.pipeThrough(new TextDecoderStream())
+  if (res.status !== 200) {
+    console.error(res)
+    throw new Error(`Failed to get completions: ${res.status}`)
+  }
+
+  return res.body!.pipeThrough(new TextDecoderStream())
     .pipeThrough(new TextLineStream())
     .pipeThrough(new CompletionsStream())
 }

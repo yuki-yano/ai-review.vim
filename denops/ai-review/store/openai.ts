@@ -89,20 +89,34 @@ export const writeResponse = createAsyncThunk<
     if (responseWindow == null || response == null) {
       return
     }
+
     const { winid, bufnr } = responseWindow
-
     const openAiClient = getOpenAiClient()
-    const openAiStream = await openAiClient.completions({
-      prompt: request.context + request.text,
-    })
+    try {
+      const openAiStream = await openAiClient.completions({
+        prompt: request.context + request.text,
+      })
 
-    let text = response.text
-    await openAiStream.pipeTo(writableStreamFromVim(denops, winid, bufnr, async (chunk) => {
-      text += chunk
-      thunkApi.dispatch(openAiSlice.actions.updateResponseText({ text }))
-      return await Promise.resolve()
-    }))
-    await writeBuffer(denops, OPENAI_SEPARATOR_LINE, winid, bufnr)
+      let text = response.text
+      const dispatchText = (chunk: string) => {
+        text += chunk
+        thunkApi.dispatch(openAiSlice.actions.updateResponseText({ text }))
+        return Promise.resolve()
+      }
+
+      const abortController = new AbortController()
+      thunkApi.dispatch(openAiSlice.actions.setResponseAbortController({ abortController }))
+      await openAiStream.pipeTo(
+        writableStreamFromVim(denops, winid, bufnr, dispatchText),
+        { signal: abortController.signal },
+      )
+      await writeBuffer(denops, OPENAI_SEPARATOR_LINE, winid, bufnr)
+    } catch (e: unknown) {
+      thunkApi.dispatch(openAiSlice.actions.cancelResponse())
+      await writeBuffer(denops, "\n", winid, bufnr)
+      await writeBuffer(denops, (e as Error).message, winid, bufnr)
+      await writeBuffer(denops, OPENAI_SEPARATOR_LINE, winid, bufnr)
+    }
   },
 )
 
@@ -129,6 +143,16 @@ export const openAiSlice = createSlice({
     resetResponse: (state) => {
       state.response = undefined
       state.responseWindow = undefined
+    },
+    setResponseAbortController: (state, action: PayloadAction<{ abortController: AbortController }>) => {
+      state.response = state.response ?? { text: "" }
+      state.response.abortController = action.payload.abortController
+    },
+    cancelResponse: (state) => {
+      state.loading = false
+
+      state.response?.abortController?.abort()
+      state.response = undefined
     },
   },
   extraReducers: (builder) => {

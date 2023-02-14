@@ -12,3 +12,7 @@ end, { range = '%' })
 vim.api.nvim_create_user_command('AiReviewResponse', function()
   vim.call('denops#notify', plugin_name, 'review', {})
 end, {})
+
+vim.api.nvim_create_user_command('AiReviewCancel', function()
+  vim.call('denops#notify', plugin_name, 'cancelResponse', {})
+end, {})

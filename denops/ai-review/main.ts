@@ -2,7 +2,7 @@ import "./store/index.ts"
 
 import { Denops, fn } from "./deps/denops.ts"
 import { unknownutil } from "./deps/utils.ts"
-import { getOpenAiRequestFileType, getOpenAiRequest } from "./openai/client.ts"
+import { getOpenAiRequest, getOpenAiRequestFileType } from "./openai/client.ts"
 import { OpenAiModes } from "./types.ts"
 import { OPENAI_REQUEST_EDITING_HEADER } from "./constant.ts"
 import { dispatch } from "./store/index.ts"
@@ -34,6 +34,10 @@ export const main = async (denops: Denops): Promise<void> => {
     },
     closeResponse: async (): Promise<void> => {
       dispatch(openAiSlice.actions.resetResponse())
+      return await Promise.resolve()
+    },
+    cancelResponse: async (): Promise<void> => {
+      dispatch(openAiSlice.actions.cancelResponse())
       return await Promise.resolve()
     },
     openRequest: async (

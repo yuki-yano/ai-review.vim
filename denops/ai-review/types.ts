@@ -10,4 +10,5 @@ export type OpenAiRequest = {
 
 export type OpenAiResponse = {
   text: string
+  abortController?: AbortController
 }
