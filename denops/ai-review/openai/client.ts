@@ -91,6 +91,7 @@ function requestTextWithFixDiagnostics(
   diagnostics: Array<Diagnostic>,
   code: string,
   filetype: string,
+  firstLine: number,
 ): string {
   return `
 ### Question
@@ -99,7 +100,7 @@ ${request}
 
 ### Diagnostics
 
-${diagnostics.map((v) => `- ${v.message}`).join("\n")}
+${diagnostics.map((v) => `- line ${v.lnum - firstLine + 2}: ${v.message}`).join("\n")}
 
 ### Source code
 
@@ -191,6 +192,7 @@ export async function getOpenAiRequest(denops: Denops, {
           diagnostics,
           code,
           fileType,
+          firstLine,
         ),
         code,
         fileType,
