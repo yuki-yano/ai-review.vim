@@ -1,4 +1,4 @@
-import { OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
+import { DIAGNOSTIC_SEVERITY, OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
 import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
 import { Window } from "../store/openai.ts"
 import { Diagnostic, OpenAiRequest } from "../types.ts"
@@ -33,7 +33,10 @@ export async function getRequestContext(
 export async function getDiagnostics(denops: Denops, { firstLine, lastLine }: { firstLine: number; lastLine: number }) {
   const diagnostics = await denops.call("luaeval", "vim.diagnostic.get()", []) as Array<Diagnostic>
   return diagnostics.filter((diagnostic) =>
-    [1, 2].includes(diagnostic.severity) &&
+    // TODO: configurable
+    ([DIAGNOSTIC_SEVERITY.ERROR, DIAGNOSTIC_SEVERITY.WARNING] as Array<Diagnostic["severity"]>).includes(
+      diagnostic.severity,
+    ) &&
     diagnostic.lnum >= firstLine && diagnostic.lnum <= lastLine
   )
 }

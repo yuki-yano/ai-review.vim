@@ -1,4 +1,4 @@
-import { OPENAI_MODES } from "./constant.ts"
+import { DIAGNOSTIC_SEVERITY, OPENAI_MODES } from "./constant.ts"
 
 export type OpenAiModes = (typeof OPENAI_MODES)[number]
 export type OpenAiRequest = {
@@ -17,5 +17,5 @@ export type Diagnostic = {
   lnum: number
   source: string
   message: string
-  severity: 1 | 2 | 3 | 4
+  severity: typeof DIAGNOSTIC_SEVERITY[keyof typeof DIAGNOSTIC_SEVERITY]
 }

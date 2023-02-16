@@ -55,3 +55,10 @@ export const OPENAI_REQUEST_EDITING_HEADER = `
 ## Query
 
 `.trimStart()
+
+export const DIAGNOSTIC_SEVERITY = {
+  ERROR: 1,
+  WARNING: 2,
+  INFORMATION: 3,
+  HINT: 4,
+} as const
