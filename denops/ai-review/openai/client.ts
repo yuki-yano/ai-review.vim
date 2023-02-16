@@ -5,6 +5,7 @@ import {
   getOpenaiFindBugsRequest,
   getOpenaiFixDiagnosticsRequest,
   getOpenaiOptimizeRequest,
+  getOpenaiSplitFunctionRequest,
   OPENAI_ADD_COMMENTS,
   OPENAI_ADD_TESTS,
   OPENAI_API_BASE,
@@ -15,6 +16,7 @@ import {
   OPENAI_MAX_TOKENS,
   OPENAI_MODEL,
   OPENAI_OPTIMIZE,
+  OPENAI_SPLIT_FUNCTION,
   OPENAI_USE_RAW_INPUT,
 } from "../constant.ts"
 import { Denops } from "../deps/denops.ts"
@@ -176,6 +178,18 @@ export async function getOpenAiRequest(denops: Denops, {
         context: OPENAI_BASE_CONTEXT,
         text: requestText(
           getOpenaiExplainRequest(fileType),
+          code,
+          fileType,
+        ),
+        code,
+        fileType,
+      }
+    }
+    case OPENAI_SPLIT_FUNCTION: {
+      return {
+        context: OPENAI_BASE_CONTEXT,
+        text: requestText(
+          getOpenaiSplitFunctionRequest(fileType),
           code,
           fileType,
         ),

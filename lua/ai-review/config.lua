@@ -64,6 +64,12 @@ local default_requests = {
       preview = default_preview,
     },
     {
+      title = 'Split function',
+      description = 'Split this code into functions',
+      mode = 'split_function',
+      preview = default_preview,
+    },
+    {
       title = 'Fix diagnostics',
       description = 'Fix diagnostics in the code',
       mode = 'fix_diagnostics',

@@ -3,6 +3,7 @@ export const OPENAI_OPTIMIZE = "optimize"
 export const OPENAI_ADD_COMMENTS = "add_comments"
 export const OPENAI_ADD_TESTS = "add_tests"
 export const OPENAI_EXPLAIN = "explain"
+export const OPENAI_SPLIT_FUNCTION = "split_function"
 export const OPENAI_FIX_DIAGNOSTICS = "fix_diagnostics"
 export const OPENAI_USE_RAW_INPUT = "use_raw_input"
 
@@ -12,6 +13,7 @@ export const OPENAI_MODES = [
   OPENAI_ADD_COMMENTS,
   OPENAI_ADD_TESTS,
   OPENAI_EXPLAIN,
+  OPENAI_SPLIT_FUNCTION,
   OPENAI_FIX_DIAGNOSTICS,
   OPENAI_USE_RAW_INPUT,
 ] as const
@@ -35,6 +37,7 @@ export const getOpenaiOptimizeRequest = (fileType: string) => `Optimize the foll
 export const getOpenaiAddCommentsRequest = (fileType: string) => `Add comments for the following ${fileType} code`
 export const getOpenaiAddTestsRequest = (fileType: string) => `Implement tests for the following ${fileType} code`
 export const getOpenaiExplainRequest = (fileType: string) => `Explain the following ${fileType} code`
+export const getOpenaiSplitFunctionRequest = (fileType: string) => `Split this ${fileType} code into functions`
 export const getOpenaiFixDiagnosticsRequest = (fileType: string) =>
   `Fix this diagnostics for the following after ${fileType} code`
 
