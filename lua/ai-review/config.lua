@@ -63,6 +63,12 @@ local default_requests = {
       mode = 'explain',
       preview = default_preview,
     },
+    {
+      title = 'Fix diagnostics',
+      description = 'Fix diagnostics in the code',
+      mode = 'fix_diagnostics',
+      preview = default_preview,
+    },
   },
   text = {
     {

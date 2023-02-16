@@ -1,7 +1,7 @@
 import { OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
 import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
 import { Window } from "../store/openai.ts"
-import { OpenAiRequest } from "../types.ts"
+import { Diagnostic, OpenAiRequest } from "../types.ts"
 import { writeBuffer } from "../vim.ts"
 
 type RequestContext = {
@@ -28,6 +28,14 @@ export async function getRequestContext(
     code,
     fileType: fileType ?? "",
   }
+}
+
+export async function getDiagnostics(denops: Denops, { firstLine, lastLine }: { firstLine: number; lastLine: number }) {
+  const diagnostics = await denops.call("luaeval", "vim.diagnostic.get()", []) as Array<Diagnostic>
+  return diagnostics.filter((diagnostic) =>
+    [1, 2].includes(diagnostic.severity) &&
+    diagnostic.lnum >= firstLine && diagnostic.lnum <= lastLine
+  )
 }
 
 export async function openRequestBuffer(denops: Denops, {

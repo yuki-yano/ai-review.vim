@@ -3,6 +3,7 @@ import {
   getOpenaiAddTestsRequest,
   getOpenaiExplainRequest,
   getOpenaiFindBugsRequest,
+  getOpenaiFixDiagnosticsRequest,
   getOpenaiOptimizeRequest,
   OPENAI_ADD_COMMENTS,
   OPENAI_ADD_TESTS,
@@ -10,13 +11,16 @@ import {
   OPENAI_BASE_CONTEXT,
   OPENAI_EXPLAIN,
   OPENAI_FIND_BUGS,
+  OPENAI_FIX_DIAGNOSTICS,
   OPENAI_MAX_TOKENS,
   OPENAI_MODEL,
   OPENAI_OPTIMIZE,
   OPENAI_USE_RAW_INPUT,
 } from "../constant.ts"
+import { Denops } from "../deps/denops.ts"
 import { TextLineStream } from "../deps/std.ts"
-import { OpenAiModes, OpenAiRequest } from "../types.ts"
+import { Diagnostic, OpenAiModes, OpenAiRequest } from "../types.ts"
+import { getDiagnostics } from "../vim/request.ts"
 
 const ORGANIZATION = Deno.env.get("OPENAI_ORGANIZATION") ?? ""
 const API_KEY = Deno.env.get("OPENAI_API_KEY")
@@ -25,7 +29,7 @@ type Client = {
   completions: typeof completions
 }
 
-const request = async (path: string, init: RequestInit): Promise<Response> => {
+async function request(path: string, init: RequestInit): Promise<Response> {
   init.method = init.method ?? "POST"
 
   init.headers = new Headers(init.headers)
@@ -36,7 +40,7 @@ const request = async (path: string, init: RequestInit): Promise<Response> => {
   return await fetch(`${OPENAI_API_BASE}${path}`, init)
 }
 
-const completions = async ({ prompt }: { prompt: string }) => {
+async function completions({ prompt }: { prompt: string }) {
   const res = await request("/completions", {
     body: JSON.stringify({
       model: OPENAI_MODEL,
@@ -53,12 +57,13 @@ const completions = async ({ prompt }: { prompt: string }) => {
     throw new Error(`Failed to get completions: ${res.status}`)
   }
 
-  return res.body!.pipeThrough(new TextDecoderStream())
+  return res
+    .body!.pipeThrough(new TextDecoderStream())
     .pipeThrough(new TextLineStream())
     .pipeThrough(new CompletionsStream())
 }
 
-export const getOpenAiClient = (): Client => {
+export function getOpenAiClient(): Client {
   if (API_KEY == null) {
     throw new Error("OPENAI_API_KEY is not set")
   }
@@ -68,24 +73,59 @@ export const getOpenAiClient = (): Client => {
   }
 }
 
-const displayRequestWithCodeBlock = (
-  request: string,
-  code: string,
-  filetype: string,
-): string => {
-  return `${request}\n\n\`\`\`${filetype}\n${code}\n\`\`\`\n`
+function requestText(request: string, code: string, filetype: string): string {
+  return `
+### Question
+
+${request}
+
+### Source code
+
+\`\`\`${filetype}
+${code}
+\`\`\``.trimStart()
 }
 
-export const getOpenAiRequest = (
-  mode: OpenAiModes,
+function requestTextWithFixDiagnostics(
+  request: string,
+  diagnostics: Array<Diagnostic>,
   code: string,
-  fileType: string,
-): OpenAiRequest => {
+  filetype: string,
+): string {
+  return `
+### Question
+
+${request}
+
+### Diagnostics
+
+${diagnostics.map((v) => `- ${v.message}`).join("\n")}
+
+### Source code
+
+\`\`\`${filetype}
+${code}
+\`\`\``.trimStart()
+}
+
+export async function getOpenAiRequest(denops: Denops, {
+  mode,
+  code,
+  fileType,
+  firstLine,
+  lastLine,
+}: {
+  mode: OpenAiModes
+  code: string
+  fileType: string
+  firstLine: number
+  lastLine: number
+}): Promise<OpenAiRequest> {
   switch (mode) {
     case OPENAI_FIND_BUGS: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        text: displayRequestWithCodeBlock(
+        text: requestText(
           getOpenaiFindBugsRequest(fileType),
           code,
           fileType,
@@ -97,7 +137,7 @@ export const getOpenAiRequest = (
     case OPENAI_OPTIMIZE: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        text: displayRequestWithCodeBlock(
+        text: requestText(
           getOpenaiOptimizeRequest(fileType),
           code,
           fileType,
@@ -109,7 +149,7 @@ export const getOpenAiRequest = (
     case OPENAI_ADD_COMMENTS: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        text: displayRequestWithCodeBlock(
+        text: requestText(
           getOpenaiAddCommentsRequest(fileType),
           code,
           fileType,
@@ -121,7 +161,7 @@ export const getOpenAiRequest = (
     case OPENAI_ADD_TESTS: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        text: displayRequestWithCodeBlock(
+        text: requestText(
           getOpenaiAddTestsRequest(fileType),
           code,
           fileType,
@@ -133,8 +173,22 @@ export const getOpenAiRequest = (
     case OPENAI_EXPLAIN: {
       return {
         context: OPENAI_BASE_CONTEXT,
-        text: displayRequestWithCodeBlock(
+        text: requestText(
           getOpenaiExplainRequest(fileType),
+          code,
+          fileType,
+        ),
+        code,
+        fileType,
+      }
+    }
+    case OPENAI_FIX_DIAGNOSTICS: {
+      const diagnostics = await getDiagnostics(denops, { firstLine, lastLine })
+      return {
+        context: OPENAI_BASE_CONTEXT,
+        text: requestTextWithFixDiagnostics(
+          getOpenaiFixDiagnosticsRequest(fileType),
+          diagnostics,
           code,
           fileType,
         ),
@@ -192,6 +246,9 @@ class CompletionsStream extends TransformStream<string, string> {
   }
 }
 
-export function getOpenAiRequestFileType(mode: OpenAiModes, fileType: string): string {
+export function getOpenAiRequestFileType(
+  mode: OpenAiModes,
+  fileType: string,
+): string {
   return mode !== OPENAI_USE_RAW_INPUT ? fileType : "text"
 }

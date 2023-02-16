@@ -61,11 +61,13 @@ export const main = async (denops: Denops): Promise<void> => {
         fileType,
       )
 
-      const request = getOpenAiRequest(
-        mode as OpenAiModes,
+      const request = await getOpenAiRequest(denops, {
+        mode: mode as OpenAiModes,
         code,
-        requestCodeFileType,
-      )
+        fileType: requestCodeFileType,
+        firstLine,
+        lastLine,
+      })
 
       await dispatch(ensureRequestBuffer({ denops, request }))
     },
@@ -106,11 +108,13 @@ export const main = async (denops: Denops): Promise<void> => {
         mode as OpenAiModes,
         fileType,
       )
-      const request = getOpenAiRequest(
-        mode as OpenAiModes,
+      const request = await getOpenAiRequest(denops, {
+        mode: mode as OpenAiModes,
         code,
-        requestCodeFileType,
-      )
+        fileType: requestCodeFileType,
+        firstLine,
+        lastLine,
+      })
 
       return request.text
     },

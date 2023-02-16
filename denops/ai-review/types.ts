@@ -12,3 +12,10 @@ export type OpenAiResponse = {
   text: string
   abortController?: AbortController
 }
+
+export type Diagnostic = {
+  lnum: number
+  source: string
+  message: string
+  severity: 1 | 2 | 3 | 4
+}
