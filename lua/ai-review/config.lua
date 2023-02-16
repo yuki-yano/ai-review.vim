@@ -40,6 +40,12 @@ local default_requests = {
       preview = default_preview,
     },
     {
+      title = 'Fix syntax error',
+      description = 'Fix syntax error in the code',
+      mode = 'fix_syntax_error',
+      preview = default_preview,
+    },
+    {
       title = 'Optimize',
       description = 'Optimize the code',
       mode = 'optimize',

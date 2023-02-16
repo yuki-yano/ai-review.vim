@@ -1,4 +1,5 @@
 export const OPENAI_FIND_BUGS = "find_bugs"
+export const OPENAI_FIX_SYNTAX_ERROR = "fix_syntax_error"
 export const OPENAI_OPTIMIZE = "optimize"
 export const OPENAI_ADD_COMMENTS = "add_comments"
 export const OPENAI_ADD_TESTS = "add_tests"
@@ -9,6 +10,7 @@ export const OPENAI_USE_RAW_INPUT = "use_raw_input"
 
 export const OPENAI_MODES = [
   OPENAI_FIND_BUGS,
+  OPENAI_FIX_SYNTAX_ERROR,
   OPENAI_OPTIMIZE,
   OPENAI_ADD_COMMENTS,
   OPENAI_ADD_TESTS,
@@ -33,6 +35,8 @@ console.log("Hello")
 `
 
 export const getOpenaiFindBugsRequest = (fileType: string) => `Find problems with the following ${fileType} code`
+export const getOpenaiFixSyntaxErrorRequest = (fileType: string) =>
+  `Please fix the syntax error in this ${fileType} code`
 export const getOpenaiOptimizeRequest = (fileType: string) => `Optimize the following ${fileType} code`
 export const getOpenaiAddCommentsRequest = (fileType: string) => `Add comments for the following ${fileType} code`
 export const getOpenaiAddTestsRequest = (fileType: string) => `Implement tests for the following ${fileType} code`

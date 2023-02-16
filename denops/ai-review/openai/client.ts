@@ -4,6 +4,7 @@ import {
   getOpenaiExplainRequest,
   getOpenaiFindBugsRequest,
   getOpenaiFixDiagnosticsRequest,
+  getOpenaiFixSyntaxErrorRequest,
   getOpenaiOptimizeRequest,
   getOpenaiSplitFunctionRequest,
   OPENAI_ADD_COMMENTS,
@@ -13,6 +14,7 @@ import {
   OPENAI_EXPLAIN,
   OPENAI_FIND_BUGS,
   OPENAI_FIX_DIAGNOSTICS,
+  OPENAI_FIX_SYNTAX_ERROR,
   OPENAI_MAX_TOKENS,
   OPENAI_MODEL,
   OPENAI_OPTIMIZE,
@@ -130,6 +132,18 @@ export async function getOpenAiRequest(denops: Denops, {
         context: OPENAI_BASE_CONTEXT,
         text: requestText(
           getOpenaiFindBugsRequest(fileType),
+          code,
+          fileType,
+        ),
+        code,
+        fileType,
+      }
+    }
+    case OPENAI_FIX_SYNTAX_ERROR: {
+      return {
+        context: OPENAI_BASE_CONTEXT,
+        text: requestText(
+          getOpenaiFixSyntaxErrorRequest(fileType),
           code,
           fileType,
         ),
