@@ -1,45 +1,8 @@
-import { DIAGNOSTIC_SEVERITY, OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
+import { OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
 import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
 import { Window } from "../store/openai.ts"
-import { Diagnostic, OpenAiRequest } from "../types.ts"
+import { OpenAiRequest } from "../types.ts"
 import { writeBuffer } from "../vim.ts"
-
-type RequestContext = {
-  code: string
-  fileType: string
-}
-
-export async function getRequestContext(
-  denops: Denops,
-  {
-    firstLine,
-    lastLine,
-    bufnr,
-  }: {
-    firstLine: number
-    lastLine: number
-    bufnr: number
-  },
-): Promise<RequestContext> {
-  const code = (await fn.getbufline(denops, bufnr, firstLine, lastLine)).join("\n")
-  const fileType = (await fn.getbufvar(denops, bufnr, "&filetype")) as string
-
-  return {
-    code,
-    fileType: fileType ?? "",
-  }
-}
-
-export async function getDiagnostics(denops: Denops, { firstLine, lastLine }: { firstLine: number; lastLine: number }) {
-  const diagnostics = await denops.call("luaeval", "vim.diagnostic.get()", []) as Array<Diagnostic>
-  return diagnostics.filter((diagnostic) =>
-    // TODO: configurable
-    ([DIAGNOSTIC_SEVERITY.ERROR, DIAGNOSTIC_SEVERITY.WARNING] as Array<Diagnostic["severity"]>).includes(
-      diagnostic.severity,
-    ) &&
-    diagnostic.lnum >= firstLine && diagnostic.lnum <= lastLine
-  )
-}
 
 export async function openRequestBuffer(denops: Denops, {
   request,
@@ -63,14 +26,17 @@ export async function openRequestBuffer(denops: Denops, {
     const result = await buffer.open(denops, OPENAI_REQUEST_BUFFER, {
       opener: splitCommand,
     })
-    await fn.setbufvar(denops, result.bufnr, "&filetype", "markdown")
-    await fn.setbufvar(denops, result.bufnr, "&buftype", "nofile")
-    await fn.setbufvar(denops, result.bufnr, "&bufhidden", "hide")
-    await fn.setbufvar(denops, result.bufnr, "&buflisted", false)
+    const { winid, bufnr } = result
 
-    const text = OPENAI_REQUEST_EDITING_HEADER + request.text
-    await fn.win_execute(denops, result.winid, "normal! ggVGd")
-    await writeBuffer(denops, text, result.winid, result.bufnr)
+    await fn.setbufvar(denops, bufnr, "&filetype", "markdown")
+    await fn.setbufvar(denops, bufnr, "&buftype", "nofile")
+    await fn.setbufvar(denops, bufnr, "&bufhidden", "hide")
+    await fn.setbufvar(denops, bufnr, "&buflisted", false)
+
+    await fn.win_execute(denops, winid, "normal! ggVGd")
+
+    await writeBuffer(denops, { text: OPENAI_REQUEST_EDITING_HEADER, winid, bufnr })
+    await writeBuffer(denops, { text: request.text, winid, bufnr, moveToEnd: false })
 
     await autocmd.define(
       denops,
@@ -104,14 +70,15 @@ export async function openRequestBuffer(denops: Denops, {
       },
     )
 
-    return { ...result, text }
+    return { ...result, text: OPENAI_REQUEST_EDITING_HEADER + request.text }
   } else {
-    await fn.win_gotoid(denops, requestWindow.winid)
-    await fn.win_execute(denops, requestWindow.winid, "normal! ggVGd")
+    const { winid, bufnr } = requestWindow
+    await fn.win_gotoid(denops, winid)
+    await fn.win_execute(denops, winid, "normal! ggVGd")
 
-    const text = OPENAI_REQUEST_EDITING_HEADER + request.text
-    await writeBuffer(denops, text, requestWindow.winid, requestWindow.bufnr)
+    await writeBuffer(denops, { text: OPENAI_REQUEST_EDITING_HEADER, winid, bufnr })
+    await writeBuffer(denops, { text: request.text, winid, bufnr, moveToEnd: false })
 
-    return { ...requestWindow, text }
+    return { ...requestWindow, text: OPENAI_REQUEST_EDITING_HEADER + request.text }
   }
 }

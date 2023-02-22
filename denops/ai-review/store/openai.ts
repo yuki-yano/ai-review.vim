@@ -110,12 +110,12 @@ export const writeResponse = createAsyncThunk<
         writableStreamFromVim(denops, winid, bufnr, dispatchText),
         { signal: abortController.signal },
       )
-      await writeBuffer(denops, OPENAI_SEPARATOR_LINE, winid, bufnr)
+      await writeBuffer(denops, { text: OPENAI_SEPARATOR_LINE, winid, bufnr })
     } catch (e: unknown) {
       thunkApi.dispatch(openAiSlice.actions.cancelResponse())
-      await writeBuffer(denops, "\n", winid, bufnr)
-      await writeBuffer(denops, (e as Error).message, winid, bufnr)
-      await writeBuffer(denops, OPENAI_SEPARATOR_LINE, winid, bufnr)
+      await writeBuffer(denops, { text: "\n", winid, bufnr })
+      await writeBuffer(denops, { text: (e as Error).message, winid, bufnr })
+      await writeBuffer(denops, { text: OPENAI_SEPARATOR_LINE, winid, bufnr })
     }
   },
 )

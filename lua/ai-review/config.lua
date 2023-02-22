@@ -1,94 +1,78 @@
+local request = require('ai-review.open-ai.request')
+
 local M = {}
 
-local plugin_name = 'ai-review'
-
 ---@class ai-review.Config
----@field requests ai-review.Requests
----@class ai-review.Requests
----@field code ai-review.Request[]
----@field text ai-review.Request[]
+---@field requests ai-review.SelectRequest[]
 
----@class ai-review.Request
+---@class ai-review.SelectRequest
 ---@field title string
----@field description string
----@field mode string
----@field preview fun(request: ai-review.Request, opts: ai-preview.request.PreviewOptions): string
+---@field request fun(opts: ai-preview.request.Options): ai-review.open-ai.Request
+---@field preview? fun(opts: ai-preview.request.Options): string
 
----@class ai-preview.request.PreviewOptions
+---@class ai-preview.request.Options
+---@field file_type string
 ---@field first_line number
 ---@field last_line number
 ---@field bufnr number
 
----@param request ai-review.Request
----@param opts ai-preview.request.PreviewOptions
-local function default_preview(request, opts)
-  return vim.call(
-    'denops#request',
-    plugin_name,
-    'requestPreview',
-    { request.mode, opts.first_line, opts.last_line, opts.bufnr }
-  )
-end
-
----@type ai-review.Requests
+---@type ai-review.SelectRequest[]
 local default_requests = {
-  code = {
-    {
-      title = 'Find bugs',
-      description = 'Find bugs in the code',
-      mode = 'find_bugs',
-      preview = default_preview,
-    },
-    {
-      title = 'Fix syntax error',
-      description = 'Fix syntax error in the code',
-      mode = 'fix_syntax_error',
-      preview = default_preview,
-    },
-    {
-      title = 'Optimize',
-      description = 'Optimize the code',
-      mode = 'optimize',
-      preview = default_preview,
-    },
-    {
-      title = 'Add comments',
-      description = 'Add comments to the code',
-      mode = 'add_comments',
-      preview = default_preview,
-    },
-    {
-      title = 'Add tests',
-      description = 'Add tests to the code',
-      mode = 'add_tests',
-      preview = default_preview,
-    },
-    {
-      title = 'Explain',
-      description = 'Explain the code',
-      mode = 'explain',
-      preview = default_preview,
-    },
-    {
-      title = 'Split function',
-      description = 'Split this code into functions',
-      mode = 'split_function',
-      preview = default_preview,
-    },
-    {
-      title = 'Fix diagnostics',
-      description = 'Fix diagnostics in the code',
-      mode = 'fix_diagnostics',
-      preview = default_preview,
-    },
+  {
+    title = 'Find bugs',
+    request = request.find_bugs,
+    preview = function(opts)
+      return request.find_bugs(opts).text
+    end,
   },
-  text = {
-    {
-      title = 'Use raw input',
-      description = 'Use raw input',
-      mode = 'use_raw_input',
-      preview = default_preview,
-    },
+  {
+    title = 'Fix syntax error',
+    request = request.fix_syntax_error,
+    preview = function(opts)
+      return request.fix_syntax_error(opts).text
+    end,
+  },
+  {
+    title = 'Split function',
+    request = request.split_function,
+    preview = function(opts)
+      return request.split_function(opts).text
+    end,
+  },
+  {
+    title = 'Fix diagnostics',
+    request = request.fix_diagnostics,
+    preview = function(opts)
+      return request.fix_diagnostics(opts).text
+    end,
+  },
+  {
+    title = 'Optimize',
+    request = request.optimize,
+    preview = function(opts)
+      return request.optimize(opts).text
+    end,
+  },
+  {
+    title = 'Add comments',
+    request = request.add_comments,
+    preview = function(opts)
+      return request.add_comments(opts).text
+    end,
+  },
+  {
+    title = 'Add tests',
+    request = request.add_tests,
+    preview = function(opts)
+      return request.add_tests(opts).text
+    end,
+  },
+  {
+    title = 'Explain',
+    request = request.explain,
+    preview = function(opts)
+      return request.explain(opts).text
+    end,
   },
 }
 

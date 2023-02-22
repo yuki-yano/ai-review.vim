@@ -3,7 +3,6 @@ local M = {}
 local Layout = require('nui.layout')
 local Menu = require('nui.menu')
 local Popup = require('nui.popup')
-local Line = require('nui.line')
 local event = require('nui.utils.autocmd').event
 
 ---@param config ai-review.Config
@@ -12,6 +11,7 @@ function M.select(config, opts)
   local first_line = opts.first_line
   local last_line = opts.last_line
   local bufnr = vim.api.nvim_get_current_buf()
+  local file_type = vim.o.filetype
 
   local nui_preview = Popup({
     size = nil,
@@ -24,18 +24,14 @@ function M.select(config, opts)
   })
 
   local lines = {}
-  local code_review_title = Line()
-  code_review_title:append('Code Review', 'Title')
-  table.insert(lines, Menu.separator(code_review_title, { char = '', text_align = 'center' }))
-  for _, request in ipairs(config.requests.code) do
-    table.insert(lines, Menu.item(request.title, { mode = request.mode, preview = request.preview }))
-  end
-
-  local use_text_title = Line()
-  use_text_title:append('Use Text', 'Title')
-  table.insert(lines, Menu.separator(use_text_title, { char = '', text_align = 'center' }))
-  for _, request in ipairs(config.requests.text) do
-    table.insert(lines, Menu.item(request.title, { mode = request.mode, preview = request.preview }))
+  for _, request in ipairs(config.requests) do
+    table.insert(
+      lines,
+      Menu.item(request.title, {
+        request = request.request,
+        preview = request.preview,
+      })
+    )
   end
 
   local nui_select = Menu({
@@ -56,28 +52,37 @@ function M.select(config, opts)
       close = { '<Esc>', '<C-c>' },
       submit = { '<CR>', '<Space>' },
     },
-    ---@param request ai-review.Request
-    on_change = function(request)
+
+    ---@param v ai-review.SelectRequest
+    on_change = function(v)
       if nui_preview.bufnr == nil then
         return
       end
 
-      local preview = request.preview(request, {
-        first_line = first_line,
-        last_line = last_line,
-        bufnr = bufnr,
-      })
+      local preview
+      if v.preview ~= nil then
+        preview = v.preview({
+          file_type = file_type,
+          first_line = first_line,
+          last_line = last_line,
+          bufnr = bufnr,
+        })
+      else
+        preview = 'No implementation'
+      end
 
       vim.api.nvim_buf_set_lines(nui_preview.bufnr, 0, -1, false, vim.split(preview, '\n', true))
       vim.api.nvim_buf_set_option(nui_preview.bufnr, 'filetype', 'markdown')
     end,
-    on_submit = function(request)
-      vim.call(
-        'denops#request',
-        'ai-review',
-        'openRequest',
-        { request.mode, first_line, last_line, bufnr }
-      )
+    ---@param v ai-review.SelectRequest
+    on_submit = function(v)
+      local request = v.request({
+        file_type = file_type,
+        first_line = first_line,
+        last_line = last_line,
+        bufnr = bufnr,
+      })
+      vim.call('denops#request', 'ai-review', 'openRequest', { request })
     end,
   })
 

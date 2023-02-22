@@ -1,9 +1,7 @@
 import "./store/index.ts"
 
 import { Denops, fn } from "./deps/denops.ts"
-import { unknownutil } from "./deps/utils.ts"
-import { getOpenAiRequest, getOpenAiRequestFileType } from "./openai/client.ts"
-import { OpenAiModes } from "./types.ts"
+import { OpenAiRequest } from "./types.ts"
 import { OPENAI_REQUEST_EDITING_HEADER } from "./constant.ts"
 import { dispatch } from "./store/index.ts"
 import {
@@ -14,7 +12,6 @@ import {
   openAiSlice,
   writeResponse,
 } from "./store/openai.ts"
-import { getRequestContext } from "./vim/request.ts"
 
 export const main = async (denops: Denops): Promise<void> => {
   denops.dispatcher = {
@@ -41,35 +38,11 @@ export const main = async (denops: Denops): Promise<void> => {
       return await Promise.resolve()
     },
     openRequest: async (
-      mode,
-      firstLine,
-      lastLine,
-      originalBufnr,
+      request,
     ): Promise<void> => {
-      unknownutil.assertString(mode)
-      unknownutil.assertNumber(firstLine)
-      unknownutil.assertNumber(lastLine)
-      unknownutil.assertNumber(originalBufnr)
-      const { code, fileType } = await getRequestContext(denops, {
-        firstLine,
-        lastLine,
-        bufnr: originalBufnr,
-      })
-
-      const requestCodeFileType = getOpenAiRequestFileType(
-        mode as OpenAiModes,
-        fileType,
+      await dispatch(
+        ensureRequestBuffer({ denops, request: request as OpenAiRequest }),
       )
-
-      const request = await getOpenAiRequest(denops, {
-        mode: mode as OpenAiModes,
-        code,
-        fileType: requestCodeFileType,
-        firstLine,
-        lastLine,
-      })
-
-      await dispatch(ensureRequestBuffer({ denops, request }))
     },
     updateRequest: async (): Promise<void> => {
       const request = openAiRequestSelector()
@@ -87,36 +60,6 @@ export const main = async (denops: Denops): Promise<void> => {
     closeRequest: async (): Promise<void> => {
       dispatch(openAiSlice.actions.resetRequest())
       return await Promise.resolve()
-    },
-    requestPreview: async (
-      mode,
-      firstLine,
-      lastLine,
-      originalBufnr,
-    ): Promise<string> => {
-      unknownutil.assertString(mode)
-      unknownutil.assertNumber(firstLine)
-      unknownutil.assertNumber(lastLine)
-      unknownutil.assertNumber(originalBufnr)
-
-      const { code, fileType } = await getRequestContext(denops, {
-        firstLine,
-        lastLine,
-        bufnr: originalBufnr,
-      })
-      const requestCodeFileType = getOpenAiRequestFileType(
-        mode as OpenAiModes,
-        fileType,
-      )
-      const request = await getOpenAiRequest(denops, {
-        mode: mode as OpenAiModes,
-        code,
-        fileType: requestCodeFileType,
-        firstLine,
-        lastLine,
-      })
-
-      return request.text
     },
   }
 
