@@ -94,10 +94,17 @@ export const writeResponse = createAsyncThunk<
     const openAiClient = getOpenAiClient()
     try {
       const openAiStream = await openAiClient.completions({
-        prompt: request.context + request.text,
+        messages: [
+          ...response.messages,
+          {
+            role: "user",
+            content: request.text,
+          },
+        ],
       })
+      thunkApi.dispatch(openAiSlice.actions.initNewMessage({ request }))
 
-      let text = response.text
+      let text = response.messages.at(-1)?.content ?? ""
       const dispatchText = (chunk: string) => {
         text += chunk
         thunkApi.dispatch(openAiSlice.actions.updateResponseText({ text }))
@@ -130,11 +137,27 @@ export const openAiSlice = createSlice({
       }
       state.request.text = action.payload.text
     },
+    initNewMessage: (state, action: PayloadAction<{ request: OpenAiRequest }>) => {
+      if (state.response == null) {
+        return
+      }
+      state.response.messages.push({
+        role: "user",
+        content: action.payload.request.text,
+      })
+      state.response.messages.push({
+        role: "assistant",
+        content: "",
+      })
+    },
     updateResponseText: (state, action: PayloadAction<{ text: string }>) => {
       if (state.response == null) {
         return
       }
-      state.response.text = action.payload.text
+      const lastIndex = state.response.messages.length - 1
+      const lastMessage = state.response.messages[lastIndex]
+      lastMessage.content = action.payload.text
+      state.response.messages[lastIndex] = lastMessage
     },
     resetRequest: (state) => {
       state.request = undefined
@@ -145,7 +168,9 @@ export const openAiSlice = createSlice({
       state.responseWindow = undefined
     },
     setResponseAbortController: (state, action: PayloadAction<{ abortController: AbortController }>) => {
-      state.response = state.response ?? { text: "" }
+      if (state.response == null) {
+        return
+      }
       state.response.abortController = action.payload.abortController
     },
     cancelResponse: (state) => {
@@ -162,7 +187,14 @@ export const openAiSlice = createSlice({
     })
     builder.addCase(ensureResponseBuffer.fulfilled, (state, action) => {
       state.responseWindow = action.payload.responseWindow
-      state.response = { text: "" }
+      if (state.response == null) {
+        state.response = {
+          messages: [{
+            role: "system",
+            content: state.request?.context ?? "",
+          }],
+        }
+      }
       state.loading = true
     })
     builder.addCase(writeResponse.fulfilled, (state) => {

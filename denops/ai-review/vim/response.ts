@@ -47,7 +47,7 @@ export async function openResponseBuffer(
 
   await writeBuffer(denops, { text: "## Request\n\n", winid, bufnr })
   await writeBuffer(denops, { text: request.text, winid, bufnr })
-  await writeBuffer(denops, { text: "\n\n## Response\n", winid, bufnr })
+  await writeBuffer(denops, { text: "\n\n## Response\n\n", winid, bufnr })
 
   const lines = (await variable.options.get(denops, "lines")) as number
   await fn.win_execute(

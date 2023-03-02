@@ -1,3 +1,8 @@
+export type ChatGptMessage = {
+  role: "system" | "user" | "assistant"
+  content: string
+}
+
 export type OpenAiRequest = {
   context: string
   text: string
@@ -6,6 +11,6 @@ export type OpenAiRequest = {
 }
 
 export type OpenAiResponse = {
-  text: string
+  messages: ReadonlyArray<ChatGptMessage>
   abortController?: AbortController
 }

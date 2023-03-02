@@ -1,5 +1,6 @@
 import { OPENAI_API_BASE, OPENAI_MAX_TOKENS, OPENAI_MODEL } from "../constant.ts"
 import { TextLineStream } from "../deps/std.ts"
+import { ChatGptMessage } from "../types.ts"
 
 const ORGANIZATION = Deno.env.get("OPENAI_ORGANIZATION") ?? ""
 const API_KEY = Deno.env.get("OPENAI_API_KEY")
@@ -19,15 +20,13 @@ async function request(path: string, init: RequestInit): Promise<Response> {
   return await fetch(`${OPENAI_API_BASE}${path}`, init)
 }
 
-async function completions({ prompt }: { prompt: string }) {
+async function completions({ messages }: { messages: ReadonlyArray<ChatGptMessage> }) {
   const res = await request("/completions", {
     body: JSON.stringify({
       model: OPENAI_MODEL,
-      prompt,
+      messages: messages,
       max_tokens: OPENAI_MAX_TOKENS,
       stream: true,
-      // TODO: Setting temperature
-      temperature: 1,
     }),
   })
 
@@ -83,6 +82,9 @@ class CompletionsStream extends TransformStream<string, string> {
     }
     const result = JSON.parse(data)
     const choice = result.choices[this.#index]
-    controller.enqueue(choice.text)
+
+    if (choice?.delta.content != null) {
+      controller.enqueue(choice.delta.content)
+    }
   }
 }
