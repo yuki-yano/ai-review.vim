@@ -21,3 +21,5 @@ export const OPENAI_REQUEST_EDITING_HEADER = `
 ## Query
 
 `.trimStart()
+
+export const REQUEST_CURSOR_POSITION_MARKER = "{{__cursor__}}"

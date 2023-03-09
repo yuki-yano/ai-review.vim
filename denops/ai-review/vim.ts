@@ -1,3 +1,4 @@
+import { REQUEST_CURSOR_POSITION_MARKER } from "./constant.ts"
 import { buffer, Denops, fn } from "./deps/denops.ts"
 
 export async function writeBuffer(
@@ -25,4 +26,10 @@ export async function writeBuffer(
   if (moveToEnd) {
     await fn.win_execute(denops, winid, "normal! G$")
   }
+}
+
+export async function moveCursorToMarker(
+  denops: Denops,
+): Promise<void> {
+  await denops.call("ai_review#move_cursor_to_marker", REQUEST_CURSOR_POSITION_MARKER)
 }

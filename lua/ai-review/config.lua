@@ -74,6 +74,13 @@ local default_requests = {
       return request.explain(opts).text
     end,
   },
+  {
+    title = 'Customize request',
+    request = request.customize_request,
+    preview = function(opts)
+      return request.customize_request(opts).text
+    end,
+  },
 }
 
 M.config = {

@@ -6,7 +6,9 @@ local M = {}
 ---@field code string
 ---@field file_type string
 
-local code_context = [[Please reply in Markdown format. When outputting code, enclose
+local code_context = [[You are a very good programmer.
+
+Please reply in Markdown format. When outputting code, enclose
 it in code fence with a file type as follows:
 
 ```typescript
@@ -14,6 +16,8 @@ console.log("Hello")
 ```
 
 ]]
+
+local cursor_position_marker = [[{{__cursor__}}]]
 
 ---@param opts ai-preview.request.Options
 local function get_code(opts)
@@ -251,6 +255,33 @@ Fix this diagnostics for the following after %s code
 ```]],
     opts.file_type,
     diagnostics_str,
+    opts.file_type,
+    code
+  )
+
+  return {
+    context = code_context,
+    text = text,
+    code = code,
+    file_type = opts.file_type,
+  }
+end
+
+---@param opts ai-preview.request.Options
+---@return ai-review.open-ai.Request
+M.customize_request = function(opts)
+  local code = get_code(opts)
+  local text = string.format(
+    [[### Question
+
+%s
+
+### Source Code
+
+```%s
+%s
+```]],
+    cursor_position_marker,
     opts.file_type,
     code
   )

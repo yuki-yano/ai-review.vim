@@ -2,7 +2,7 @@ import { OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constan
 import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
 import { Window } from "../store/openai.ts"
 import { OpenAiRequest } from "../types.ts"
-import { writeBuffer } from "../vim.ts"
+import { moveCursorToMarker, writeBuffer } from "../vim.ts"
 
 export async function openRequestBuffer(denops: Denops, {
   request,
@@ -37,6 +37,7 @@ export async function openRequestBuffer(denops: Denops, {
 
     await writeBuffer(denops, { text: OPENAI_REQUEST_EDITING_HEADER, winid, bufnr })
     await writeBuffer(denops, { text: request.text, winid, bufnr, moveToEnd: false })
+    await moveCursorToMarker(denops)
 
     await autocmd.define(
       denops,
@@ -78,6 +79,7 @@ export async function openRequestBuffer(denops: Denops, {
 
     await writeBuffer(denops, { text: OPENAI_REQUEST_EDITING_HEADER, winid, bufnr })
     await writeBuffer(denops, { text: request.text, winid, bufnr, moveToEnd: false })
+    await moveCursorToMarker(denops)
 
     return { ...requestWindow, text: OPENAI_REQUEST_EDITING_HEADER + request.text }
   }

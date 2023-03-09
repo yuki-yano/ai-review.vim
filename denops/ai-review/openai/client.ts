@@ -1,4 +1,4 @@
-import { OPENAI_API_BASE, OPENAI_MAX_TOKENS, OPENAI_MODEL } from "../constant.ts"
+import { OPENAI_API_BASE, OPENAI_MODEL } from "../constant.ts"
 import { TextLineStream } from "../deps/std.ts"
 import { ChatGptMessage } from "../types.ts"
 
@@ -25,7 +25,6 @@ async function completions({ messages }: { messages: ReadonlyArray<ChatGptMessag
     body: JSON.stringify({
       model: OPENAI_MODEL,
       messages: messages,
-      max_tokens: OPENAI_MAX_TOKENS,
       stream: true,
     }),
   })
