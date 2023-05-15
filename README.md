@@ -12,6 +12,14 @@ https://user-images.githubusercontent.com/5423775/218340551-7bac325a-d21e-4865-9
 
 Set `OPENAI_API_KEY` environment variable and execute `:AiReview` or `:'<,'>AiReview`
 
+```lua
+require('ai-review').setup({
+  chat_gpt = {
+    model = 'gpt-3.5-turbo', -- or gpt-4
+  },
+})
+```
+
 ## Required
 
 - [denops.vim](https://github.com/vim-denops/denops.vim)

@@ -3,6 +3,10 @@ local request = require('ai-review.open-ai.request')
 local M = {}
 
 ---@class ai-review.Config
+---@field chat_gpt ChatGPT
+
+---@class ChatGPT
+---@field model string
 ---@field requests ai-review.SelectRequest[]
 
 ---@class ai-review.SelectRequest
@@ -84,7 +88,10 @@ local default_requests = {
 }
 
 M.config = {
-  requests = default_requests,
+  chat_gpt = {
+    model = 'gpt-3.5-turbo',
+    requests = default_requests,
+  },
 }
 
 return M

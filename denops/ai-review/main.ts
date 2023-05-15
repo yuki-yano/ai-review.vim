@@ -12,9 +12,14 @@ import {
   openAiSlice,
   writeResponse,
 } from "./store/openai.ts"
+import { Config, configSlice } from "./store/config.ts"
 
 export const main = async (denops: Denops): Promise<void> => {
   denops.dispatcher = {
+    setup: async (config: unknown): Promise<void> => {
+      dispatch(configSlice.actions.setup({ config: config as Config }))
+      return await Promise.resolve()
+    },
     review: async (): Promise<void> => {
       const request = openAiRequestSelector()
       if (request == null) {

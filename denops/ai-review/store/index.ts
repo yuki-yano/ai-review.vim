@@ -1,10 +1,14 @@
 import { redux } from "../deps/store.ts"
+import { configSlice } from "./config.ts"
 import { openAiSlice } from "./openai.ts"
 
 const { configureStore } = redux
 
 export const store = configureStore({
-  reducer: { openAi: openAiSlice.reducer },
+  reducer: {
+    config: configSlice.reducer,
+    openAi: openAiSlice.reducer,
+  },
 })
 
 export type RootState = ReturnType<typeof store.getState>

@@ -24,7 +24,7 @@ function M.select(config, opts)
   })
 
   local lines = {}
-  for _, request in ipairs(config.requests) do
+  for _, request in ipairs(config.chat_gpt.requests) do
     table.insert(
       lines,
       Menu.item(request.title, {
@@ -82,7 +82,7 @@ function M.select(config, opts)
         last_line = last_line,
         bufnr = bufnr,
       })
-      vim.call('denops#request', 'ai-review', 'openRequest', { request })
+      vim.fn['ai_review#request']('openRequest', { request })
     end,
   })
 

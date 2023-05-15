@@ -1,5 +1,6 @@
-import { OPENAI_API_BASE, OPENAI_MODEL } from "../constant.ts"
+import { OPENAI_API_BASE, OPENAI_MAX_TOKENS } from "../constant.ts"
 import { TextLineStream } from "../deps/std.ts"
+import { modelSelector } from "../store/config.ts"
 import { ChatGptMessage } from "../types.ts"
 
 const ORGANIZATION = Deno.env.get("OPENAI_ORGANIZATION") ?? ""
@@ -23,8 +24,9 @@ async function request(path: string, init: RequestInit): Promise<Response> {
 async function completions({ messages }: { messages: ReadonlyArray<ChatGptMessage> }) {
   const res = await request("/completions", {
     body: JSON.stringify({
-      model: OPENAI_MODEL,
+      model: modelSelector(),
       messages: messages,
+      max_tokens: OPENAI_MAX_TOKENS,
       stream: true,
     }),
   })

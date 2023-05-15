@@ -1,8 +1,6 @@
-local plugin_name = 'ai-review'
-
 vim.api.nvim_create_user_command('AiReview', function(opts)
   if opts.range == 0 then
-    vim.call('denops#request', 'ai-review', 'openRequest', {
+    vim.fn['ai_review#request']('openRequest', {
       {
         context = '',
         text = '',
@@ -21,9 +19,9 @@ vim.api.nvim_create_user_command('AiReview', function(opts)
 end, { range = true })
 
 vim.api.nvim_create_user_command('AiReviewResponse', function()
-  vim.call('denops#notify', plugin_name, 'review', {})
+  vim.fn['ai_review#notify']('review', {})
 end, {})
 
 vim.api.nvim_create_user_command('AiReviewCancel', function()
-  vim.call('denops#notify', plugin_name, 'cancelResponse', {})
+  vim.fn['ai_review#notify']('cancelResponse', {})
 end, {})
