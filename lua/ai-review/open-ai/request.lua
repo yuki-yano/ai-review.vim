@@ -19,12 +19,12 @@ console.log("Hello")
 
 local cursor_position_marker = [[{{__cursor__}}]]
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 local function get_code(opts)
   return table.concat(vim.fn.getbufline(opts.bufnr, opts.first_line, opts.last_line), '\n')
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 local function get_diagnostics(opts)
   local diagnostics = vim.diagnostic.get(opts.bufnr)
   local result = {}
@@ -38,7 +38,7 @@ local function get_diagnostics(opts)
   return result
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.find_bugs = function(opts)
   local code = get_code(opts)
@@ -65,7 +65,7 @@ Find problems with the following %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.fix_syntax_error = function(opts)
   local code = get_code(opts)
@@ -92,7 +92,7 @@ Fix the syntax error in the following %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.optimize = function(opts)
   local code = get_code(opts)
@@ -119,7 +119,7 @@ Optimize the following %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.add_comments = function(opts)
   local code = get_code(opts)
@@ -146,7 +146,7 @@ Add comments to the following %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.add_tests = function(opts)
   local code = get_code(opts)
@@ -173,7 +173,7 @@ Implement tests for the following %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.explain = function(opts)
   local code = get_code(opts)
@@ -200,7 +200,7 @@ Explain the following %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.split_function = function(opts)
   local code = get_code(opts)
@@ -227,7 +227,7 @@ Split the following %s code into functions
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.fix_diagnostics = function(opts)
   local diagnostics = get_diagnostics(opts)
@@ -267,7 +267,7 @@ Fix this diagnostics for the following after %s code
   }
 end
 
----@param opts ai-preview.request.Options
+---@param opts ai-review.request.Options
 ---@return ai-review.open-ai.Request
 M.customize_request = function(opts)
   local code = get_code(opts)

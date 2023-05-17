@@ -11,10 +11,10 @@ local M = {}
 
 ---@class ai-review.SelectRequest
 ---@field title string
----@field request fun(opts: ai-preview.request.Options): ai-review.open-ai.Request
----@field preview? fun(opts: ai-preview.request.Options): string
+---@field request fun(opts: ai-review.request.Options): ai-review.open-ai.Request
+---@field preview? fun(opts: ai-review.request.Options): string
 
----@class ai-preview.request.Options
+---@class ai-review.request.Options
 ---@field file_type string
 ---@field first_line number
 ---@field last_line number
