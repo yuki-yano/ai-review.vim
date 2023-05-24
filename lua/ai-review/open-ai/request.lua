@@ -30,7 +30,7 @@ local function get_diagnostics(opts)
   local result = {}
   for _, diagnostic in ipairs(diagnostics) do
     if diagnostic.severity == vim.diagnostic.severity.ERROR or diagnostic.severity == vim.diagnostic.severity.WARN then
-      if diagnostic.lnum >= opts.first_line and diagnostic.lnum <= opts.last_line then
+      if diagnostic.lnum + 1 >= opts.first_line and diagnostic.lnum + 1 <= opts.last_line then
         table.insert(result, diagnostic)
       end
     end
