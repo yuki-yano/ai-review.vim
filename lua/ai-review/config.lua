@@ -87,11 +87,13 @@ local default_requests = {
   },
 }
 
-M.config = {
+M.default_config = {
   chat_gpt = {
     model = 'gpt-3.5-turbo',
     requests = default_requests,
   },
 }
+
+M.config = {}
 
 return M

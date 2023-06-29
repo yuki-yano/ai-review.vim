@@ -1,12 +1,13 @@
-local default_config = require('ai-review.config').config
+local Config = require('ai-review.config')
+local default_config = require('ai-review.config').default_config
 
 local M = {}
 
----@param config ai-review.Config
-function M.setup(config)
+---@param opts ai-review.Config
+function M.setup(opts)
   local function setup()
-    config = vim.tbl_extend('force', default_config, config or {})
-
+    local config = vim.tbl_extend('force', default_config, opts or {})
+    Config.config = config
     vim.fn['ai_review#request']('setup', { config })
   end
 
