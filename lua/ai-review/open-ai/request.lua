@@ -19,9 +19,40 @@ console.log("Hello")
 
 local cursor_position_marker = [[{{__cursor__}}]]
 
+local function count_indent(line)
+  local i = 0
+  while string.sub(line, i + 1, i + 1):match('%s') do
+    i = i + 1
+  end
+  return i
+end
+
+local function remove_common_indent(code)
+  local min_indent = nil
+
+  for _, line in ipairs(code) do
+    if line ~= '' then
+      local indent = count_indent(line)
+      if min_indent == nil or indent < min_indent then
+        min_indent = indent
+      end
+    end
+  end
+
+  if min_indent ~= nil and min_indent > 0 then
+    for i, line in ipairs(code) do
+      code[i] = string.sub(line, min_indent + 1)
+    end
+  end
+
+  return code
+end
+
 ---@param opts ai-review.request.Options
 local function get_code(opts)
-  return table.concat(vim.fn.getbufline(opts.bufnr, opts.first_line, opts.last_line), '\n')
+  local code = vim.fn.getbufline(opts.bufnr, opts.first_line, opts.last_line)
+
+  return table.concat(remove_common_indent(code), '\n')
 end
 
 ---@param opts ai-review.request.Options
