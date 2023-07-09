@@ -3,13 +3,15 @@ local request = require('ai-review.open-ai.request')
 local M = {}
 
 ---@class ai-review.Config
+---@field backend string
+---@field log_dir string
 ---@field chat_gpt ChatGPT
 
 ---@class ChatGPT
 ---@field model string
----@field requests ai-review.SelectRequest[]
+---@field requests ai-review.Request[]
 
----@class ai-review.SelectRequest
+---@class ai-review.Request
 ---@field title string
 ---@field request fun(opts: ai-review.request.Options): ai-review.open-ai.Request
 ---@field preview? fun(opts: ai-review.request.Options): string
@@ -20,7 +22,7 @@ local M = {}
 ---@field last_line number
 ---@field bufnr number
 
----@type ai-review.SelectRequest[]
+---@type ai-review.Request[]
 local default_requests = {
   {
     title = 'Find bugs',
@@ -88,6 +90,8 @@ local default_requests = {
 }
 
 M.default_config = {
+  backend = 'nui',
+  log_dir = vim.fn.stdpath('state') .. '/ai-review',
   chat_gpt = {
     model = 'gpt-3.5-turbo',
     requests = default_requests,

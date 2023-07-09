@@ -1,7 +1,6 @@
 import { OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
 import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
-import { Window } from "../store/openai.ts"
-import { OpenAiRequest } from "../types.ts"
+import { OpenAiRequest, ReviewWindow } from "../types.ts"
 import { moveCursorToMarker, writeBuffer } from "../vim.ts"
 
 export async function openRequestBuffer(denops: Denops, {
@@ -10,9 +9,9 @@ export async function openRequestBuffer(denops: Denops, {
   responseWindow,
 }: {
   request: OpenAiRequest
-  requestWindow: Window | undefined
-  responseWindow: Window | undefined
-}): Promise<Window> {
+  requestWindow: ReviewWindow | undefined
+  responseWindow: ReviewWindow | undefined
+}): Promise<ReviewWindow> {
   const lines = (await variable.options.get(denops, "lines")) as number
   const splitCommand = responseWindow == null
     ? "noswapfile vertical topleft split"
