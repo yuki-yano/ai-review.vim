@@ -119,7 +119,7 @@ export const writeResponse = createAsyncThunk<
       )
       await writeBuffer(denops, { text: OPENAI_SEPARATOR_LINE, winid, bufnr })
     } catch (e: unknown) {
-      thunkApi.dispatch(openAiSlice.actions.cancelResponse())
+      thunkApi.dispatch(openAiSlice.actions.abortResponse())
       await writeBuffer(denops, { text: "\n", winid, bufnr })
       await writeBuffer(denops, { text: (e as Error).message, winid, bufnr })
       await writeBuffer(denops, { text: OPENAI_SEPARATOR_LINE, winid, bufnr })
@@ -172,6 +172,10 @@ export const openAiSlice = createSlice({
         return
       }
       state.response.abortController = action.payload.abortController
+    },
+    abortResponse: (state) => {
+      state.loading = false
+      state.response?.abortController?.abort()
     },
     cancelResponse: (state) => {
       state.loading = false
