@@ -39,7 +39,9 @@ let g:ai_review_chat_gpt_model = 'gpt-4'
 ## Request preset
 
 The request preset is defined as a list of objects of the following type (expressed in TypeScript).
+
 The request and preview can be defined with Vim script's funcref or Lua function, and you can modify it by setting the list of objects to `g:ai_review_chat_gpt_requests`.
+
 (Ref: https://github.com/yuki-yano/ai-review.vim/blob/main/autoload/ai_review/open_ai/request.vim)
 
 ```typescript
@@ -68,7 +70,10 @@ type Request = {
 ## History Management
 
 The commands `:AiReviewSave` and `:AiReviewLoad` allow you to easily save and retrieve your chat history.
+
 The log save location is set to `g:ai_review_log_dir`. The default is `~/.cache/vim/ai-review`.
+
+Additionally, you can display the history using ddu with the `:AiReviewLog` command.
 
 ## Requirements
 
