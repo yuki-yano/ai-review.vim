@@ -5,4 +5,3 @@ function ai_review#util#move_cursor_to_marker(marker) abort
 
   execute "silent normal! /" .. a:marker .. "\<CR>\"_dgn"
 endfunction
-
