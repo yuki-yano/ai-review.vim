@@ -80,12 +80,10 @@ vim.fn['ddu#custom#patch_global']({
 This plugin requires
 
 - [denops.vim](https://github.com/vim-denops/denops.vim)
-- [nui.nvim](https://github.com/MunifTanjim/nui.nvim).
 
-### Optional
+Need either of the following two as a backend:
 
-The following is an optional requirement:
-
+- [nui.nvim](https://github.com/MunifTanjim/nui.nvim)
 - [ddu.vim](https://github.com/Shougo/ddu.vim)
 
 ## Acknowledgements
