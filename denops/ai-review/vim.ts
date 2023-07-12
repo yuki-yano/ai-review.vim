@@ -31,5 +31,5 @@ export async function writeBuffer(
 export async function moveCursorToMarker(
   denops: Denops,
 ): Promise<void> {
-  await denops.call("ai_review#move_cursor_to_marker", REQUEST_CURSOR_POSITION_MARKER)
+  await denops.call("ai_review#util#move_cursor_to_marker", REQUEST_CURSOR_POSITION_MARKER)
 }
