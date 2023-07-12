@@ -20,7 +20,7 @@ export class Kind extends BaseKind<Params> {
       const item = items[0]
       const action = item.action as ActionData
 
-      await denops.call("ai_review#request", "openRequest", [action.request])
+      await denops.call("denops#request", "ai-review", "openRequest", [action.request])
 
       return Promise.resolve(ActionFlags.None)
     },
