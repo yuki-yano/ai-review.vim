@@ -53,7 +53,7 @@ function M.select(config, opts)
       submit = { '<CR>', '<Space>' },
     },
 
-    ---@param v ai-review.SelectRequest
+    ---@param v ai-review.Request
     on_change = function(v)
       if nui_preview.bufnr == nil then
         return
@@ -74,7 +74,7 @@ function M.select(config, opts)
       vim.api.nvim_buf_set_lines(nui_preview.bufnr, 0, -1, false, vim.split(preview, '\n', true))
       vim.api.nvim_buf_set_option(nui_preview.bufnr, 'filetype', 'markdown')
     end,
-    ---@param v ai-review.SelectRequest
+    ---@param v ai-review.Request
     on_submit = function(v)
       local request = v.request({
         file_type = file_type,

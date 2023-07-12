@@ -13,10 +13,11 @@ type Client = {
 async function request(path: string, init: RequestInit): Promise<Response> {
   init.method = init.method ?? "POST"
 
-  init.headers = new Headers(init.headers)
-  init.headers.set("Authorization", `Bearer ${API_KEY}`)
-  init.headers.set("Content-Type", "application/json")
-  init.headers.set("OpenAI-Organization", ORGANIZATION)
+  const headers = new Headers(init.headers)
+  headers.set("Authorization", `Bearer ${API_KEY}`)
+  headers.set("Content-Type", "application/json")
+  headers.set("OpenAI-Organization", ORGANIZATION)
+  init.headers = headers
 
   return await fetch(`${OPENAI_API_BASE}${path}`, init)
 }

@@ -8,6 +8,7 @@ export type Config = {
     // Not use TypeScript
     // requests: Array
   }
+  log_dir: string
 }
 
 type ConfigState = {
@@ -15,11 +16,12 @@ type ConfigState = {
 }
 
 const configInitialState: ConfigState = {
+  // Set from config.lua
   config: {
     chat_gpt: {
-      // Set from config.lua
       model: "",
     },
+    log_dir: "",
   },
 }
 
@@ -28,9 +30,11 @@ export const configSlice = createSlice({
   initialState: configInitialState,
   reducers: {
     setup: (state, action: PayloadAction<ConfigState>) => {
+      // TODO: validate config
       state.config = action.payload.config
     },
   },
 })
 
 export const modelSelector = (): string => store.getState().config.config.chat_gpt.model
+export const logDirSelector = (): string => store.getState().config.config.log_dir

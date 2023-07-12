@@ -1,7 +1,6 @@
 import { OPENAI_REVIEW_BUFFER } from "../constant.ts"
 import { autocmd, buffer, Denops, fn, variable } from "../deps/denops.ts"
-import { Window } from "../store/openai.ts"
-import { OpenAiRequest } from "../types.ts"
+import { OpenAiRequest, ReviewWindow } from "../types.ts"
 import { writeBuffer } from "../vim.ts"
 
 export async function openResponseBuffer(
@@ -10,12 +9,14 @@ export async function openResponseBuffer(
     request,
     requestWindow,
     responseWindow,
+    log,
   }: {
     request: OpenAiRequest
-    requestWindow: Window | undefined
-    responseWindow: Window | undefined
+    requestWindow: ReviewWindow | undefined
+    responseWindow: ReviewWindow | undefined
+    log?: Array<string>
   },
-): Promise<Window> {
+): Promise<ReviewWindow> {
   if (requestWindow == null) {
     throw new Error("requestWindow is undefined")
   }
@@ -31,7 +32,7 @@ export async function openResponseBuffer(
 
     await autocmd.define(
       denops,
-      "WinClosed",
+      ["BufDelete", "WinClosed"],
       "<buffer>",
       `call denops#request("${denops.name}", "closeResponse", [])`,
     )
@@ -41,13 +42,18 @@ export async function openResponseBuffer(
 
   const { winid, bufnr } = responseWindow
 
-  if ((await fn.getbufline(denops, bufnr, "$"))[0] !== "") {
-    await writeBuffer(denops, { text: "\n\n", winid, bufnr })
-  }
+  // resume
+  if (log != null) {
+    await writeBuffer(denops, { text: log.join("\n"), winid, bufnr })
+  } else {
+    if ((await fn.getbufline(denops, bufnr, "$"))[0] !== "") {
+      await writeBuffer(denops, { text: "\n\n", winid, bufnr })
+    }
 
-  await writeBuffer(denops, { text: "## Request\n\n", winid, bufnr })
-  await writeBuffer(denops, { text: request.text, winid, bufnr })
-  await writeBuffer(denops, { text: "\n\n## Response\n\n", winid, bufnr })
+    await writeBuffer(denops, { text: "## Request\n\n", winid, bufnr })
+    await writeBuffer(denops, { text: request.text, winid, bufnr })
+    await writeBuffer(denops, { text: "\n\n## Response\n\n", winid, bufnr })
+  }
 
   const lines = (await variable.options.get(denops, "lines")) as number
   await fn.win_execute(
