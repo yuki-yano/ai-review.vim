@@ -82,7 +82,7 @@ function M.select(config, opts)
         last_line = last_line,
         bufnr = bufnr,
       })
-      vim.fn['ai_review#request']('openRequest', { request })
+      vim.fn['denops#request']('ai-review', 'openRequest', { request })
     end,
   })
 

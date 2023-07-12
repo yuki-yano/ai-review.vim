@@ -8,7 +8,7 @@ function M.setup(opts)
   local function setup()
     local config = vim.tbl_deep_extend('force', default_config, opts or {})
     Config.config = config
-    vim.fn['ai_review#request']('setup', { config })
+    vim.fn['ai_review#_request']('setup', { config })
   end
 
   if vim.fn['denops#server#status']() == 'running' then
