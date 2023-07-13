@@ -32,7 +32,7 @@ call ddu#custom#patch_global({
 
 Then, activate the plugin by executing `:AiReview` or `:'<,'>AiReview`.
 
-By default, it is set to use the `gpt-3.5-turbo` model. If you want to use GPT-4, please set `g:ai_review_chat_gpt_model` to `gpt-4`.
+By default, it is set to use the `gpt-3.5-turbo` model. If you want to use GPT-4, please call `ai_review#config` with `gpt-4`.
 
 ```vim
 call ai_review#config({ 'chat_gpt': { 'model': 'gpt-4' } })
