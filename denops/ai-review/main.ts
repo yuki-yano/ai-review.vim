@@ -59,11 +59,11 @@ export const main = async (denops: Denops): Promise<void> => {
 
       const requestText = await fn.getline(
         denops,
-        OPENAI_REQUEST_EDITING_HEADER.split("\n").length,
+        OPENAI_REQUEST_EDITING_HEADER.split("\n").length - 1,
         "$",
       )
       dispatch(
-        openAiSlice.actions.updateRequestText({ text: requestText.join("\n") }),
+        openAiSlice.actions.updateRequestText({ text: requestText.join("\n").trimStart() }),
       )
     },
     closeRequest: async (): Promise<void> => {
