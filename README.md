@@ -48,7 +48,7 @@ call ai_review#config({ 'backend': 'nui' })
 
 The request preset is defined as a list of objects of the following type (expressed in TypeScript).
 
-The request and preview can be defined with Vim script's funcref or Lua function, and you can modify it by setting the list of objects to `g:ai_review_chat_gpt_requests`.
+The request and preview can be defined with Vim script's funcref or Lua function, and you can modify it by setting the list of objects to `call ai_review#config({ 'chat_gpt': { 'requests': [] } })`.
 
 (Ref: https://github.com/yuki-yano/ai-review.vim/blob/main/autoload/ai_review/open_ai/request.vim)
 
