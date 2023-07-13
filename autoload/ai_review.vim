@@ -51,7 +51,7 @@ let g:ai_review#_config = {
       \ }
       \ }
 
-function! ai_review#notify(funcname, args) abort
+function! ai_review#safe_notify(funcname, args) abort
   let funcname = a:funcname
   let args = a:args
   call denops#plugin#wait_async('ai-review', { -> denops#notify('ai-review', funcname, args) })
@@ -60,7 +60,7 @@ endfunction
 function! ai_review#config(...) abort
   let config = a:0 == 0 ? {} : a:1
   let g:ai_review#_config = ai_review#util#deep_merge(g:ai_review#_config, config)
-  call ai_review#notify('config', [g:ai_review#_config])
+  call ai_review#safe_notify('config', [ai_review#util#remove_funcref(g:ai_review#_config)])
 endfunction
 
 function! ai_review#request(range, line1, line2) abort

@@ -18,7 +18,7 @@ export class Kind extends BaseKind<Params> {
         throw new Error("Invalid number of items")
       }
 
-      await denops.call("ai_review#notify", "resume", [
+      await denops.call("ai_review#safe_notify", "resume", [
         (items[0].action as ActionData).path,
       ])
       return Promise.resolve(ActionFlags.None)
