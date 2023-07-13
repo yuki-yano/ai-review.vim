@@ -1,4 +1,4 @@
-import { ActionArguments, ActionFlags, BaseKind, DduItem, Previewer } from "https://deno.land/x/ddu_vim@v3.4.1/types.ts"
+import { ActionArguments, ActionFlags, BaseKind, DduItem, Previewer } from "../ai-review/deps/ddu.ts"
 import { OpenAiRequest } from "../ai-review/types.ts"
 
 export type ActionData = {
@@ -32,7 +32,7 @@ export class Kind extends BaseKind<Params> {
     return await Promise.resolve({
       kind: "nofile",
       contents: action.preview.split("\n"),
-      syntax: "markdown",
+      filetype: "markdown",
     })
   }
 

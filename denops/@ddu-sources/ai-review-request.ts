@@ -1,4 +1,4 @@
-import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v3.4.1/types.ts"
+import { BaseSource, Item } from "../ai-review/deps/ddu.ts"
 import { Denops } from "../ai-review/deps/denops.ts"
 import { ActionData } from "../@ddu-kinds/ai-review-request.ts"
 

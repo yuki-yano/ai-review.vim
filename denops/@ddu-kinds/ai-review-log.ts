@@ -1,4 +1,4 @@
-import { ActionArguments, ActionFlags, BaseKind, DduItem, Previewer } from "https://deno.land/x/ddu_vim@v3.4.1/types.ts"
+import { ActionArguments, ActionFlags, BaseKind, DduItem, Previewer } from "../ai-review/deps/ddu.ts"
 import { fn } from "../ai-review/deps/denops.ts"
 
 export type ActionData = {
@@ -70,7 +70,7 @@ export class Kind extends BaseKind<Params> {
     return {
       kind: "nofile",
       contents: preview,
-      syntax: "markdown",
+      filetype: "markdown",
     }
   }
 
