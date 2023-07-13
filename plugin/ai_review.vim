@@ -4,6 +4,7 @@ endif
 
 if !exists('g:ai_review_config')
   let g:ai_review_config = {
+        \ 'backend': 'ddu',
         \ 'log_dir': expand('~/.cache/vim/ai-review'),
         \ 'chat_gpt': {
         \   'model': 'gpt-3.5-turbo',

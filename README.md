@@ -6,6 +6,8 @@ The ai-review.vim plugin harnesses the power of OpenAI's API for conducting code
 
 This plugin relies on [denops.vim](https://github.com/vim-denops/denops.vim) and [ddu.vim](https://github.com/Shougo/ddu.vim).
 
+Instead of ddu.vim, you can use [nui.nvim](https://github.com/MunifTanjim/nui.nvim) which enables you to use functionality beyond history management with Fuzzy Finder.
+
 ## Demo
 
 https://user-images.githubusercontent.com/5423775/218340551-7bac325a-d21e-4865-9cde-389766497b57.mp4
@@ -34,6 +36,12 @@ By default, it is set to use the `gpt-3.5-turbo` model. If you want to use GPT-4
 
 ```vim
 call ai_review#config({ 'chat_gpt': { 'model': 'gpt-4' } })
+```
+
+If you want to use nui.nvim instead of ddu, please set as follows:
+
+```vim
+call ai_review#config({ 'backend': 'nui' })
 ```
 
 ## Request preset
@@ -85,6 +93,12 @@ This plugin requires
 
 - [denops.vim](https://github.com/vim-denops/denops.vim)
 - [ddu.vim](https://github.com/Shougo/ddu.vim)
+
+### Optional
+
+When using nui.nvim instead of ddu.vim:
+
+- [nui.nvim](https://github.com/MunifTanjim/nui.nvim)
 
 ## Acknowledgements
 

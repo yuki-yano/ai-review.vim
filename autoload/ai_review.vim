@@ -19,7 +19,11 @@ function! ai_review#request(range, line1, line2) abort
           \ 'file_type': 'text',
           \ }])
   else
-    call ai_review#ddu#request(a:line1, a:line2)
+    if g:ai_review_config.backend == 'ddu'
+      call ai_review#ddu#request(a:line1, a:line2)
+    elseif g:ai_review_config.backend == 'nui'
+      call luaeval('require("ai-review.nui").request(_A[1], _A[2])', [g:ai_review_config, { 'first_line': a:line1, 'last_line': a:line2 }])
+    endif
   endif
 endfunction
 
@@ -51,6 +55,11 @@ function! ai_review#get_logs(_, __, ___) abort
 endfunction
 
 function! ai_review#logs() abort
+  if g:ai_review_config.backend != 'ddu'
+    echoerr 'ai-review#logs() is only available for ddu backend'
+    return
+  endif
+
   call ddu#start({
         \ 'sources': [
         \   {

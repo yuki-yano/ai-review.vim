@@ -55,7 +55,7 @@ function! s:get_diagnostics(opts)
     return []
   endif
 
-  let diagnostics = luaeval('vim.diagnostic.get(' . a:opts.bufnr . ')')
+  let diagnostics = luaeval('vim.diagnostic.get(_A[1])', [a:opts.bufnr])
   let result = []
   for diagnostic in diagnostics
     if diagnostic.severity == 1 || diagnostic.severity == 2
