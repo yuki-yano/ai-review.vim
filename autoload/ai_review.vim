@@ -4,13 +4,10 @@ function! ai_review#notify(funcname, args) abort
   call denops#plugin#wait_async('ai-review', { -> denops#notify('ai-review', funcname, args) })
 endfunction
 
-function! ai_review#setup() abort
-  call denops#request('ai-review', 'setup', [{
-        \ 'log_dir': g:ai_review_log_dir,
-        \ 'chat_gpt': {
-        \   'model': g:ai_review_chat_gpt_model,
-        \ },
-        \ }])
+function! ai_review#config(...) abort
+  let config = a:0 == 0 ? {} : a:1
+  let g:ai_review_config = ai_review#util#deep_merge(g:ai_review_config, config)
+  call ai_review#notify('config', [g:ai_review_config])
 endfunction
 
 function! ai_review#request(range, line1, line2) abort
@@ -34,8 +31,9 @@ function! ai_review#cancel() abort
   call denops#notify('ai-review', 'cancelResponse', [])
 endfunction
 
-function! ai_review#save(name) abort
-  call denops#notify('ai-review', 'saveResponse', [a:name])
+function! ai_review#save(...) abort
+  let name = a:0 == 0 ? '' : a:1
+  call denops#notify('ai-review', 'saveResponse', [name])
 endfunction
 
 function! ai_review#load(name) abort

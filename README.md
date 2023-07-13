@@ -33,7 +33,7 @@ Then, activate the plugin by executing `:AiReview` or `:'<,'>AiReview`.
 By default, it is set to use the `gpt-3.5-turbo` model. If you want to use GPT-4, please set `g:ai_review_chat_gpt_model` to `gpt-4`.
 
 ```vim
-let g:ai_review_chat_gpt_model = 'gpt-4'
+call ai_review#config({ 'chat_gpt': { 'model': 'gpt-4' } })
 ```
 
 ## Request preset
@@ -71,7 +71,11 @@ type Request = {
 
 The commands `:AiReviewSave` and `:AiReviewLoad` allow you to easily save and retrieve your chat history.
 
-The log save location is set to `g:ai_review_log_dir`. The default is `~/.cache/vim/ai-review`.
+The log save location is set to `call ai_review#config`. The default is `~/.cache/vim/ai-review`.
+
+```vim
+call ai_review#config({ 'log_dir': 'path/to/dir' })
+```
 
 Additionally, you can display the history using ddu with the `:AiReviewLog` command.
 

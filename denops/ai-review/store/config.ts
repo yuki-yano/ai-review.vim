@@ -3,12 +3,12 @@ import { store } from "./index.ts"
 const { createSlice } = redux
 
 export type Config = {
+  log_dir: string
   chat_gpt: {
     model: string
     // Not use TypeScript
     // requests: Array
   }
-  log_dir: string
 }
 
 type ConfigState = {
@@ -16,12 +16,11 @@ type ConfigState = {
 }
 
 const configInitialState: ConfigState = {
-  // Set from config.lua
   config: {
+    log_dir: "",
     chat_gpt: {
       model: "",
     },
-    log_dir: "",
   },
 }
 
@@ -29,7 +28,7 @@ export const configSlice = createSlice({
   name: "config",
   initialState: configInitialState,
   reducers: {
-    setup: (state, action: PayloadAction<ConfigState>) => {
+    config: (state, action: PayloadAction<ConfigState>) => {
       // TODO: validate config
       state.config = action.payload.config
     },

@@ -20,8 +20,8 @@ import { getLogFiles, readLogFile } from "./log.ts"
 
 export const main = async (denops: Denops): Promise<void> => {
   denops.dispatcher = {
-    setup: async (config: unknown): Promise<void> => {
-      dispatch(configSlice.actions.setup({ config: config as Config }))
+    config: async (config: unknown): Promise<void> => {
+      dispatch(configSlice.actions.config({ config: config as Config }))
       return await Promise.resolve()
     },
     review: async (): Promise<void> => {

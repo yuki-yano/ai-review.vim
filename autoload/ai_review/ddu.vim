@@ -6,7 +6,7 @@ function! ai_review#ddu#request(first_line, last_line)
         \ 'requests': [],
         \ }
 
-  for request in g:ai_review_chat_gpt_requests
+  for request in g:ai_review_config.chat_gpt.requests
     call add(source_params.requests, {
           \ 'title': request.title,
           \ 'request': request.request({
