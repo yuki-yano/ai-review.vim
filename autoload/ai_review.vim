@@ -51,10 +51,16 @@ let g:ai_review#_config = {
       \ }
       \ }
 
+let g:ai_review#default_config = deepcopy(g:ai_review#_config)
+
 function! ai_review#safe_notify(funcname, args) abort
   let funcname = a:funcname
   let args = a:args
   call denops#plugin#wait_async('ai-review', { -> denops#notify('ai-review', funcname, args) })
+endfunction
+
+function ai_review#get_default_config() abort
+  return deepcopy(g:ai_review#default_config)
 endfunction
 
 function! ai_review#config(...) abort

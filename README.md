@@ -44,6 +44,8 @@ If you want to use nui.nvim instead of ddu, please set as follows:
 call ai_review#config({ 'backend': 'nui' })
 ```
 
+To get the default value of the setting, please execute `ai_review#get_default_config`.
+
 ## Request preset
 
 The request preset is defined as a list of objects of the following type (expressed in TypeScript).
