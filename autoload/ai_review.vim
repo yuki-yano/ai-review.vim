@@ -71,6 +71,7 @@ endfunction
 
 function! ai_review#request(range, line1, line2) abort
   if a:range == 0
+    call denops#plugin#wait('ai-review')
     call denops#request('ai-review', 'openRequest', [{
           \ 'context': '',
           \ 'text': '',
