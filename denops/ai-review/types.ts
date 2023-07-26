@@ -1,12 +1,9 @@
+import { ChatCompletionRequestMessage } from "./deps/ai.ts"
+
 export type ReviewWindow = {
   winid: number
   bufnr: number
   text: string
-}
-
-export type ChatGptMessage = {
-  role: "system" | "user" | "assistant"
-  content: string
 }
 
 export type OpenAiRequest = {
@@ -17,6 +14,6 @@ export type OpenAiRequest = {
 }
 
 export type OpenAiResponse = {
-  messages: Array<ChatGptMessage>
+  messages: Array<ChatCompletionRequestMessage>
   abortController?: AbortController
 }
