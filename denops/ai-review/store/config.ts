@@ -40,11 +40,28 @@ export const configSlice = createSlice({
   initialState: configInitialState,
   reducers: {
     config: (state, action: PayloadAction<ConfigState>) => {
-      // TODO: validate config
-      state.config = action.payload.config;
+      const input = action.payload.config;
+      validate(input);
+      state.config = input;
     },
   },
 });
+
+const validate = (config: Config) => {
+  if (config.chat_gpt.model === "") {
+    throw new Error("chatGPT model is empty");
+  }
+  const azureConfig = config.chat_gpt.azure;
+  if (azureConfig.use) {
+    console.log(azureConfig);
+    if (azureConfig.url === "") {
+      throw new Error("chatGPT azure.url is empty");
+    }
+    if (azureConfig.api_version === "") {
+      throw new Error("chatGPT azure.api_version is empty");
+    }
+  }
+};
 
 export const modelSelector = (): string =>
   store.getState().config.config.chat_gpt.model;
