@@ -53,7 +53,6 @@ const validate = (config: Config) => {
   }
   const azureConfig = config.chat_gpt.azure
   if (azureConfig.use) {
-    console.log(azureConfig)
     if (azureConfig.url === "") {
       throw new Error("chatGPT azure.url is empty")
     }
