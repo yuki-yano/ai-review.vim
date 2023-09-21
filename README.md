@@ -38,6 +38,12 @@ By default, it is set to use the `gpt-3.5-turbo` model. If you want to use GPT-4
 call ai_review#config({ 'chat_gpt': { 'model': 'gpt-4' } })
 ```
 
+If you want to use with Azure OpenAI Service, you'll need to include an endpoint and an api-version:
+
+```vim
+call ai_review#config({ 'chat_gpt': { 'model': 'gpt-4', 'azure': { 'use': v:true, 'url': 'https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME', 'api_version': '2023-07-01-preview' } } })
+```
+
 If you want to use nui.nvim instead of ddu, please set as follows:
 
 ```vim

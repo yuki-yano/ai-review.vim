@@ -3,6 +3,9 @@ let g:ai_review#_config = {
       \ 'log_dir': expand('~/.cache/vim/ai-review'),
       \ 'chat_gpt': {
       \   'model': 'gpt-3.5-turbo',
+      \   'azure': {
+      \      'use': v:false,
+      \   },
       \   'requests': [{
       \     'title': 'Find bugs',
       \     'request': function('ai_review#open_ai#request#find_bugs'),
