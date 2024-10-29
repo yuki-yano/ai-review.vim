@@ -1,5 +1,5 @@
 import { ActionArguments, ActionFlags, BaseKind, DduItem, Previewer } from "../ai-review/deps/ddu.ts"
-import { OpenAiRequest } from "../ai-review/types.ts"
+import type { OpenAiRequest } from "../ai-review/types.ts"
 
 export type ActionData = {
   request: OpenAiRequest
@@ -26,7 +26,7 @@ export class Kind extends BaseKind<Params> {
     },
   }
 
-  async getPreviewer(args: { item: DduItem }): Promise<Previewer | undefined> {
+  override async getPreviewer(args: { item: DduItem }): Promise<Previewer | undefined> {
     const action = args.item.action as ActionData
 
     return await Promise.resolve({

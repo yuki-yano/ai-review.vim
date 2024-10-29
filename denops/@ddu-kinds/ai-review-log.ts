@@ -58,7 +58,7 @@ export class Kind extends BaseKind<Params> {
     },
   }
 
-  async getPreviewer(args: { item: DduItem }): Promise<Previewer | undefined> {
+  override async getPreviewer(args: { item: DduItem }): Promise<Previewer | undefined> {
     const action = args.item.action as ActionData
     if (action?.path == null) {
       return Promise.resolve(undefined)

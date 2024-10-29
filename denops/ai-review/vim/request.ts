@@ -1,6 +1,6 @@
 import { OPENAI_REQUEST_BUFFER, OPENAI_REQUEST_EDITING_HEADER } from "../constant.ts"
 import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
-import { OpenAiRequest, ReviewWindow } from "../types.ts"
+import type { OpenAiRequest, ReviewWindow } from "../types.ts"
 import { moveCursorToMarker, writeBuffer } from "../vim.ts"
 
 export async function openRequestBuffer(denops: Denops, {
