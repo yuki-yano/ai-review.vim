@@ -1,6 +1,6 @@
 import { OPENAI_REVIEW_BUFFER } from "../constant.ts"
-import { autocmd, buffer, Denops, fn, variable } from "../deps/denops.ts"
-import { OpenAiRequest, ReviewWindow } from "../types.ts"
+import { autocmd, buffer, Denops, fn, mapping, variable } from "../deps/denops.ts"
+import type { OpenAiRequest, ReviewWindow } from "../types.ts"
 import { writeBuffer } from "../vim.ts"
 
 export async function openResponseBuffer(
@@ -36,6 +36,13 @@ export async function openResponseBuffer(
       "<buffer>",
       `call denops#request("${denops.name}", "closeResponse", [])`,
     )
+
+    await mapping.map(denops, "q", "<Cmd>quit<CR>", {
+      noremap: true,
+      mode: ["n"],
+      silent: true,
+      buffer: true,
+    })
 
     responseWindow = { ...result, text: "" }
   }

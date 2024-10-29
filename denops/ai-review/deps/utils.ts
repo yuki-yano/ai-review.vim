@@ -1,4 +1,4 @@
-export * as unknownutil from "https://deno.land/x/unknownutil@v2.1.0/mod.ts"
+export * as unknownutil from "jsr:@core/unknownutil"
 
-import dayjs from "https://esm.sh/dayjs@1.11.9"
+import dayjs from "npm:dayjs@1.11.13"
 export { dayjs }

@@ -1,7 +1,7 @@
 import { Denops, fn } from "./deps/denops.ts"
 import { dayjs } from "./deps/utils.ts"
 import { logDirSelector } from "./store/config.ts"
-import { OpenAiRequest, OpenAiResponse, ReviewWindow } from "./types.ts"
+import type { OpenAiRequest, OpenAiResponse, ReviewWindow } from "./types.ts"
 
 export const getLogFiles = async (): Promise<Array<{ name: string; path: string }>> => {
   const logDir = logDirSelector()

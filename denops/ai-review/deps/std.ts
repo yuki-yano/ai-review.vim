@@ -1,3 +1,2 @@
-export { TextLineStream } from "https://deno.land/std@0.173.0/streams/text_line_stream.ts"
-export { delay } from "https://deno.land/std@0.173.0/async/mod.ts"
-export { deepMerge } from "https://deno.land/std@0.173.0/collections/deep_merge.ts"
+export { delay } from "jsr:@std/async@0.224.2/delay"
+export { deepMerge } from "jsr:@std/collections@0.224.2/deep-merge"

@@ -1,7 +1,7 @@
 import "./store/index.ts"
 
 import { Denops, fn } from "./deps/denops.ts"
-import { OpenAiRequest, OpenAiResponse } from "./types.ts"
+import type { OpenAiRequest, OpenAiResponse } from "./types.ts"
 import { OPENAI_REQUEST_EDITING_HEADER } from "./constant.ts"
 import { dispatch } from "./store/index.ts"
 import {
